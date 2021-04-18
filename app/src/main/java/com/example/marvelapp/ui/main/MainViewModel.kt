@@ -1,30 +1,28 @@
 package com.example.marvelapp.ui.main
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList
-import com.example.marvelapp.data.model.Character
-import com.example.marvelapp.data.retrofit.ApiInterface
-import com.example.marvelapp.di.ApiModule.initPagingConfig
-import com.example.marvelapp.paging.CharactersDataSource
+import androidx.lifecycle.switchMap
+import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import com.example.marvelapp.data.repository.CharacterRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(private val api: ApiInterface, private val query: String) : ViewModel() {
+@HiltViewModel
+class MainViewModel @Inject constructor(private val repo: CharacterRepository) :
+    ViewModel() {
 
-    var charactersLiveData: LiveData<PagedList<Character>>
+    private val query = MutableLiveData<String>()
 
     init {
-        charactersLiveData = initPagedListBuilder(initPagingConfig()).build()
+        getData("")
     }
 
-    private fun initPagedListBuilder(config: PagedList.Config): LivePagedListBuilder<Int, Character> {
-        val dataSourceFactory = object : DataSource.Factory<Int, Character>() {
-            override fun create(): DataSource<Int, Character> {
-                return CharactersDataSource(api, query)
-            }
-        }
-        return LivePagedListBuilder<Int, Character>(dataSourceFactory, config)
+    val character = query.switchMap { query -> repo.getResults(query).cachedIn(viewModelScope) }
+
+    fun getData(query: String) {
+        this.query.value = query
     }
 
 

@@ -1,7 +1,9 @@
 package com.example.marvelapp.di
 
 import androidx.paging.PagedList
+import androidx.paging.PagingConfig
 import com.example.marvelapp.BuildConfig
+import com.example.marvelapp.data.repository.CharacterRepository
 import com.example.marvelapp.data.retrofit.ApiInterface
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
@@ -59,8 +61,10 @@ object ApiModule {
                 chain.request()
                     .url
                     .newBuilder()
+                    .addQueryParameter("ts", "1")
                     .addQueryParameter("apikey", BuildConfig.apikey)
                     .addQueryParameter("hash", BuildConfig.hash)
+                    .addQueryParameter("limit", "10")
                     .build()
             )
             .build()
@@ -69,18 +73,20 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit) = retrofit.create(ApiInterface::class.java)
+    fun provideApiService(retrofit: Retrofit) : ApiInterface = retrofit.create(ApiInterface::class.java)
+
 
     @Provides
     @Singleton
     fun initPagingConfig(
         pageSize: Int = 10,
-        enablePlaceHolder: Boolean = true,
+        enablePlaceHolder: Boolean = false,
         prefetchDistance: Int = 2
     ) =
-        PagedList.Config.Builder()
-            .setPageSize(pageSize)
-            .setEnablePlaceholders(enablePlaceHolder)
-            .setPrefetchDistance(prefetchDistance)
-            .build()
+        PagingConfig(
+            pageSize = pageSize,
+            maxSize = 100,
+            enablePlaceholders = enablePlaceHolder,
+            prefetchDistance = prefetchDistance
+        )
 }

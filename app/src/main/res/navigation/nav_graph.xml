@@ -9,7 +9,11 @@
         android:id="@+id/mainFragment"
         android:name="com.example.marvelapp.ui.main.MainFragment"
         android:label="main_fragment"
-        tools:layout="@layout/main_fragment" />
+        tools:layout="@layout/main_fragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/splash"
         android:name="com.example.marvelapp.ui.splash.Splash"
@@ -20,4 +24,8 @@
             app:popUpTo="@id/splash"
             app:popUpToInclusive="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.example.marvelapp.ui.detailsFragment.DetailsFragment"
+        android:label="DetailsFragment" />
 </navigation>

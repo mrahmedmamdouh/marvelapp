@@ -2,8 +2,10 @@ package com.example.marvelapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.marvelapp.ui.main.MainFragment
+import com.example.marvelapp.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

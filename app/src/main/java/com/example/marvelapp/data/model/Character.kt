@@ -1,8 +1,11 @@
 package com.example.marvelapp.data.model
 
+import android.os.Parcelable
 import com.squareup.moshi.JsonClass
+import kotlinx.android.parcel.Parcelize
 
 @JsonClass(generateAdapter = true)
+@Parcelize
 data class Character (
     val id: Int,
     val name: String,
@@ -15,4 +18,4 @@ data class Character (
     val stories: StoryList,
     val events: EventList,
     val series: SeriesList
-)
+) : Parcelable
